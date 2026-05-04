@@ -1,0 +1,640 @@
+{
+  "name": "AI Ticket Intake",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "AI Ticket Intake",
+        "formDescription": "Submit your IT request and our system will route it automatically. \nWe’ll get back to you as soon as possible.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Full Name",
+              "placeholder": "Type your full name here.",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "placeholder": "Ex. example@company.com",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Issue",
+              "fieldType": "textarea",
+              "placeholder": "Describe the issue in detail.",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Priority",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Low"
+                  },
+                  {
+                    "option": "Medium"
+                  },
+                  {
+                    "option": "High"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -560,
+        -80
+      ],
+      "id": "ca660c2d-3110-412c-8820-cc7968a8af38",
+      "name": "On form submission",
+      "webhookId": "714e0e5a-dd57-4f96-b2c0-31db80f25903"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appcsdWUfP7GXdK2q",
+          "mode": "list",
+          "cachedResultName": "N8N Data",
+          "cachedResultUrl": "https://airtable.com/appcsdWUfP7GXdK2q"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbla5WQuR6LPL81yx",
+          "mode": "list",
+          "cachedResultName": "AI Ticket Intake",
+          "cachedResultUrl": "https://airtable.com/appcsdWUfP7GXdK2q/tbla5WQuR6LPL81yx"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email Sent": false,
+            "User": "={{ $json['Full Name'] }}",
+            "Issue": "={{ $json.Issue }}",
+            "Priority": "={{ $json.Priority }}",
+            "Status": "Pending",
+            "Email": "={{ $json.Email }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Auto Number",
+              "displayName": "Auto Number",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Ticket ID",
+              "displayName": "Ticket ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Issue",
+              "displayName": "Issue",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "High",
+                  "value": "High"
+                },
+                {
+                  "name": "Medium",
+                  "value": "Medium"
+                },
+                {
+                  "name": "Low",
+                  "value": "Low"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Date Submitted",
+              "displayName": "Date Submitted",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "In Progress",
+                  "value": "In Progress"
+                },
+                {
+                  "name": "Resolved",
+                  "value": "Resolved"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "AI Summary",
+              "displayName": "AI Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email Sent",
+              "displayName": "Email Sent",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -352,
+        -80
+      ],
+      "id": "afe66f04-1054-4821-ad89-747a37260ad9",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "K2DIxSRnGiSpkm2r",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.fields.Email }}",
+        "subject": "Your IT Support Ticket Has Been Submitted Successfully",
+        "emailType": "text",
+        "message": "=IT Ticket Submitted Successfully (Ticket ID: {{ $json.fields['Ticket ID'] }})",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -144,
+        -80
+      ],
+      "id": "55ed2c16-6451-4020-a87f-a9e9abebbffa",
+      "name": "Send a message",
+      "webhookId": "712864a5-f2c1-4977-bcd2-24efadb56571",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tN354ZVvnNfn3jqO",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appcsdWUfP7GXdK2q",
+          "mode": "list",
+          "cachedResultName": "N8N Data",
+          "cachedResultUrl": "https://airtable.com/appcsdWUfP7GXdK2q"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbla5WQuR6LPL81yx",
+          "mode": "list",
+          "cachedResultName": "AI Ticket Intake",
+          "cachedResultUrl": "https://airtable.com/appcsdWUfP7GXdK2q/tbla5WQuR6LPL81yx"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email Sent": true,
+            "User": "={{ $('Create a record').item.json.fields.User }}",
+            "Email": "={{ $('Create a record').item.json.fields.Email }}"
+          },
+          "matchingColumns": [
+            "Email",
+            "User"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Auto Number",
+              "displayName": "Auto Number",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Ticket ID",
+              "displayName": "Ticket ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "User",
+              "displayName": "User",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Issue",
+              "displayName": "Issue",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "High",
+                  "value": "High"
+                },
+                {
+                  "name": "Medium",
+                  "value": "Medium"
+                },
+                {
+                  "name": "Low",
+                  "value": "Low"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Date Submitted",
+              "displayName": "Date Submitted",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "In Progress",
+                  "value": "In Progress"
+                },
+                {
+                  "name": "Resolved",
+                  "value": "Resolved"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "AI Summary",
+              "displayName": "AI Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Email Sent",
+              "displayName": "Email Sent",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        64,
+        -80
+      ],
+      "id": "ce301d38-831a-4643-be58-48984dee401e",
+      "name": "Create or update a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "K2DIxSRnGiSpkm2r",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "authentication": "airtableTokenApi",
+        "baseId": {
+          "__rl": true,
+          "value": "https://airtable.com/appcsdWUfP7GXdK2q/tbla5WQuR6LPL81yx/viw2VCixfL4XN6MvA?blocks=hide",
+          "mode": "url"
+        },
+        "tableId": {
+          "__rl": true,
+          "value": "https://airtable.com/appcsdWUfP7GXdK2q/tbla5WQuR6LPL81yx/viw2VCixfL4XN6MvA?blocks=hide",
+          "mode": "url"
+        },
+        "triggerField": "Ticket ID",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.airtableTrigger",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        128
+      ],
+      "id": "5b291dcc-db28-41de-a245-fe96d4a2627f",
+      "name": "Airtable Trigger",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "K2DIxSRnGiSpkm2r",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are the IT Support Team’s coordinator. Your task is to collect incoming information about new support tickets and produce a concise summary to email to IT management. The email should be signed with “IT Support Team.”\n\nTicket details:\n\nTicket ID: {{ $json.fields['Ticket ID'] }}\n\nUser: {{ $json.fields.User }}\n\nIssue: {{ $json.fields.Issue }}\n\nPriority: {{ $json.fields.Priority }}\n\nDate Submitted: {{ $json.fields['Date Submitted'] }}\n\nStatus: {{ $json.fields.Status }}\n\nOutput requirements:\n\nReturn ONLY a valid JSON object with the following keys: email_subject and email_content.\n\nemail_subject should include the Ticket ID.\n\nemail_content must include all ticket details as bullet points using hyphens -.\n\nUse \\n only for new lines.\n\nNo Markdown, bold, italics, or extra formatting.\n\nOutput MUST be valid JSON and fully parseable by n8n.\n\nBoth fields must be plain strings only.\n\nGenerate the JSON now.\n\nExample of correct output:\n\n{\n\"email_subject\": \"New Support Ticket: TCK-004\",\n\"email_content\": \"Dear Management,\\n\\nPlease find a summary of a new support ticket that has been logged:\\n\\n- Ticket ID: TCK-004\\n- User: Mahmoud Ali\\n- Issue: Cannot Connect to WIFI\\n- Priority: High\\n- Date Submitted: 2025-11-04\\n- Status: Pending\\n\\nBest regards,\\nIT Support Team\"\n}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -352,
+        128
+      ],
+      "id": "729c0cf8-36f9-48e9-b3a5-f557d9e9dc3d",
+      "name": "Message a model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "BYCMZPZsRLTI8niq",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "mh.magdi.nasser@gmail.com",
+        "subject": "={{ $json.content.parts[0].text.parseJson().email_subject }}",
+        "emailType": "text",
+        "message": "={{ $json.content.parts[0].text.parseJson().email_content }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        128
+      ],
+      "id": "d3e97fe3-8f79-44a5-831a-fde8b5cbc3a3",
+      "name": "Send a message1",
+      "webhookId": "8c302c43-9805-4de4-83d6-734e6422a338",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tN354ZVvnNfn3jqO",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Create or update a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable Trigger": {
+      "main": [
+        [
+          {
+            "node": "Message a model1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model1": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0a90d548-2204-4b3a-bdaf-a6a2e2ebda58",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "acdad6c320738f64b9d1d74ff0869c01e0d44034958fc7552e0eb483d17e4784"
+  },
+  "id": "oyqGcnGEkiWwEy9N",
+  "tags": []
+}

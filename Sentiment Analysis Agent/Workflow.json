@@ -1,0 +1,523 @@
+{
+  "name": "Free Sentiment Analysis Agent using OpenSourceLLM",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appcsdWUfP7GXdK2q",
+          "mode": "list",
+          "cachedResultName": "N8N Data",
+          "cachedResultUrl": "https://airtable.com/appcsdWUfP7GXdK2q"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblZIdQHJGITCm0IV",
+          "mode": "list",
+          "cachedResultName": "Sentiment Analysis Records",
+          "cachedResultUrl": "https://airtable.com/appcsdWUfP7GXdK2q/tblZIdQHJGITCm0IV"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Username": "={{ $json.Username }}",
+            "Email": "={{ $json.Email }}",
+            "Sentence": "={{ $json.Sentence }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Auto Number",
+              "displayName": "Auto Number",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Ticket ID",
+              "displayName": "Ticket ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Username",
+              "displayName": "Username",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Sentence",
+              "displayName": "Sentence",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Date Submitted",
+              "displayName": "Date Submitted",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Sentiment Prediction",
+              "displayName": "Sentiment Prediction",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Positive",
+                  "value": "Positive"
+                },
+                {
+                  "name": "Negative",
+                  "value": "Negative"
+                },
+                {
+                  "name": "Neutral",
+                  "value": "Neutral"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Confidence Score",
+              "displayName": "Confidence Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -464,
+        32
+      ],
+      "id": "77090b79-e883-43a7-85c8-138fac7cc542",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "K2DIxSRnGiSpkm2r",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appcsdWUfP7GXdK2q",
+          "mode": "list",
+          "cachedResultName": "N8N Data",
+          "cachedResultUrl": "https://airtable.com/appcsdWUfP7GXdK2q"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblZIdQHJGITCm0IV",
+          "mode": "list",
+          "cachedResultName": "Sentiment Analysis Records",
+          "cachedResultUrl": "https://airtable.com/appcsdWUfP7GXdK2q/tblZIdQHJGITCm0IV"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.id }}",
+            "Sentiment Prediction": "={{ $json.text.parseJson().sentiment }}",
+            "Confidence Score": "={{ $json.text.parseJson().confidence_score }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Auto Number",
+              "displayName": "Auto Number",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Ticket ID",
+              "displayName": "Ticket ID",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Username",
+              "displayName": "Username",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Sentence",
+              "displayName": "Sentence",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Date Submitted",
+              "displayName": "Date Submitted",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Sentiment Prediction",
+              "displayName": "Sentiment Prediction",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Positive",
+                  "value": "Positive"
+                },
+                {
+                  "name": "Negative",
+                  "value": "Negative"
+                },
+                {
+                  "name": "Neutral",
+                  "value": "Neutral"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Confidence Score",
+              "displayName": "Confidence Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        304,
+        48
+      ],
+      "id": "ab1047a4-d94b-4eff-a2d5-7364fbcab1d8",
+      "name": "Update record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "K2DIxSRnGiSpkm2r",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.fields.Email }}",
+        "subject": "Sentiment Analysis Result for Your Submission",
+        "emailType": "text",
+        "message": "=Hello {{ $json.fields.Username }},\n\nYour sentence: \"{{ $json.fields.Sentence }}\"\nSentiment: {{ $json.fields['Sentiment Prediction'] }}\n\nThank you,\n\nSentiment Analysis Team",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        528,
+        48
+      ],
+      "id": "2821e7df-14d7-4b3c-a96b-1a4d42bc2392",
+      "name": "Send a message",
+      "webhookId": "54a4b0ee-ca3c-473b-8ab6-e072aa96426f",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tN354ZVvnNfn3jqO",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "Sentiment Analysis Form",
+        "formDescription": "Please enter the sentence you want analyzed for sentiment. We'll get back to you soon.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Username",
+              "placeholder": "Type your username here.",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email",
+              "fieldType": "email",
+              "placeholder": "Ex. example@gmail.com",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Sentence",
+              "fieldType": "textarea",
+              "placeholder": "Ex. add sentence here.",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -672,
+        32
+      ],
+      "id": "0ba8b479-a286-41d2-bd99-5eee053a03de",
+      "name": "On form submission",
+      "webhookId": "03801982-a7c2-4d4c-887b-bb6402d953d3"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        80,
+        48
+      ],
+      "id": "e257dfd5-412a-47bf-9a17-20ae8b699cd7",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Sentence: \"{{ $json.fields.Sentence }}\"",
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "message": "You are a sentiment analysis assistant. Analyze the sentiment of the given sentence.  Return ONLY a valid JSON object with these fields:  - \"sentiment\": one of \"Positive\", \"Negative\", or \"Neutral\" (choose the most appropriate) - \"confidence_score\": a number between 0 and 1 indicating your confidence.  Do NOT include any extra text, explanation, or formatting outside the JSON."
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7,
+      "position": [
+        -256,
+        144
+      ],
+      "id": "a210d188-13b9-4468-a23c-82fab7e63e87",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-20b:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        336
+      ],
+      "id": "904d069d-928e-4d03-9f39-16ce4e0212dd",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "89l166fne6q51SxP",
+          "name": "OpenRouter account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Create a record": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update record": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Update record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5a62f155-9c3a-401a-bdc7-b81f780ced06",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "acdad6c320738f64b9d1d74ff0869c01e0d44034958fc7552e0eb483d17e4784"
+  },
+  "id": "xlHpODvvleBRXVWI",
+  "tags": []
+}

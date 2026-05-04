@@ -1,0 +1,154 @@
+{
+  "name": "Hotel Reservation Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Hotel Reservation",
+        "formDescription": "Choose your room?",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Your Name",
+              "placeholder": "Type your name.",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Choose your room?",
+              "fieldType": "checkbox",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Single Room"
+                  },
+                  {
+                    "option": "Deluxe Room"
+                  },
+                  {
+                    "option": "Suite"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -592,
+        -48
+      ],
+      "id": "ced6130f-c114-4f6f-a6cb-5847cd53df23",
+      "name": "On form submission",
+      "webhookId": "73fff172-fb7a-431b-9a40-d0e1546766cf"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appcsdWUfP7GXdK2q",
+          "mode": "list",
+          "cachedResultName": "N8N Data",
+          "cachedResultUrl": "https://airtable.com/appcsdWUfP7GXdK2q"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblWvko0ZFBeyofTh",
+          "mode": "list",
+          "cachedResultName": "Reservation Info",
+          "cachedResultUrl": "https://airtable.com/appcsdWUfP7GXdK2q/tblWvko0ZFBeyofTh"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json['Your Name'] }}",
+            "Room": "={{ $json['Choose your room?'][0] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Room",
+              "displayName": "Room",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Reservation Date",
+              "displayName": "Reservation Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -384,
+        -48
+      ],
+      "id": "3fcb2f6b-9243-4d01-914d-6c5104eb27d7",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "K2DIxSRnGiSpkm2r",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5d6ba0aa-787f-4b91-a2c3-1248467d8dec",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "acdad6c320738f64b9d1d74ff0869c01e0d44034958fc7552e0eb483d17e4784"
+  },
+  "id": "LHCmRe7ENbyuYE1O",
+  "tags": []
+}

@@ -1,0 +1,195 @@
+{
+  "name": "Smart PCs Components Sales Chatbot",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "92b529d0-60ac-43d3-a1a5-284ad2ff6043",
+      "name": "When chat message received",
+      "webhookId": "8b269778-256e-4347-8496-db5544b662a2"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are the official AI Sales Agent for \"PCs Components Sales\", a company specialized in selling computer parts, graphics cards, servers, workstations, and high-end hardware.\n\n1. Language Rules\n- Always reply in the same language the customer is using.\n- If the customer writes in Arabic → reply in clear Egyptian Arabic (مصري).\n- If the customer writes in English → reply in English.\n- Keep tone professional, friendly, and helpful.\n\n2. Data Source Rules\n- All information (prices, specs, availability, warranty, features) MUST come ONLY from the attached Google Sheet.\n- Never invent or guess any data.\n- If the requested information is not in the sheet, reply exactly: \"المعلومة دي مش موجودة في قاعدة البيانات حالياً.\"\n\n3. Recommendations\n- When giving recommendations, analyze: budget, usage (gaming, rendering, AI, office, etc.), brand preference, and specific needs.\n- Compare only products that exist in the sheet.\n- Clearly show pros, cons, and best use cases.\n- Never recommend out-of-stock or unlisted items.\n\n4. Purchase Process (Follow exactly)\nIf the customer wants to buy:\nStep 1 → Ask for: Full Name + Phone Number\nStep 2 → Confirm the EXACT product name (must match the sheet exactly)\nStep 3 → ONLY after getting both name + phone → generate the purchase email (see template below)\n\n5. Cancellation Process\nIf customer wants to cancel:\n- If Arabic: reply \"تحب أأكد لحضرتك إلغاء الطلب؟\"\n- If English: reply \"Would you like me to confirm the cancellation of your order?\"\nAfter they confirm → generate cancellation email using the exact template below.\n\n6. Email Templates (Plain text only - no markdown, no tables)\n\nPurchase Email Template:\nDear Owner,\n\nA new purchase request has been received with the following details:\n\n- Customer Name: {{CUSTOMER_NAME}}\n- Phone Number: {{PHONE_NUMBER}}\n- Product: {{EXACT_PRODUCT_NAME}}\n- Price: {{PRICE_FROM_SHEET}}\n\nPlease process the order accordingly.\n\nBest regards,\nPCs Components Sales AI Agent\n\nCancellation Email Template:\nDear Owner,\n\nA customer has canceled their purchase request. Here are the details:\n\n- Customer Name: {{CUSTOMER_NAME}}\n- Phone Number: {{PHONE_NUMBER}}\n- Previously Requested Product: {{PRODUCT_NAME}}\n\nPlease note that the order has been canceled based on the customer's request.\n\nBest regards,\nPCs Components Sales\n\n7. Email Rules\n- NEVER generate a purchase email without both name AND phone number.\n- NEVER generate a purchase email if the customer didn’t clearly say they want to buy.\n- Emails must be clean plain text (compatible with Gmail node).\n\n8. Context & Memory\n- Remember everything from previous messages in this conversation.\n- Track budget, preferred brands, usage, and selected products.\n\n9. Safety & Accuracy\n- Never recommend unavailable products.\n- If multiple similar products exist, ask for clarification.\n- Always represent \"PCs Components Sales\" professionally.\n\nYour goal: Help customers find the perfect hardware and guide them smoothly to complete or cancel their order."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        224,
+        0
+      ],
+      "id": "4eaa2d8f-71e0-42a2-abe7-35f7c81061a9",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        128,
+        208
+      ],
+      "id": "0bf5f8f5-1a0e-48b9-a175-5695116a412b",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "Opwarsn6CE4mxuBw",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 50
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        304,
+        240
+      ],
+      "id": "a49566c6-d43b-42e3-83e5-2c33044691de",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1AilZ8XCRNDD4SEQk6QzFTEzJrkvfRMBAyJHLuZUyYW8",
+          "mode": "list",
+          "cachedResultName": "N8N Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AilZ8XCRNDD4SEQk6QzFTEzJrkvfRMBAyJHLuZUyYW8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1475226774,
+          "mode": "list",
+          "cachedResultName": "PCs Components Details",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AilZ8XCRNDD4SEQk6QzFTEzJrkvfRMBAyJHLuZUyYW8/edit#gid=1475226774"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        464,
+        224
+      ],
+      "id": "0ffac654-b371-44d1-8f49-a14483036c99",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "abLMB8zmY4TfoGTW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "mh.magdi.nasser@gmail.com",
+        "subject": "Customer Purchase Request",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        624,
+        192
+      ],
+      "id": "c33514f4-b502-4979-bd0c-09a6f042d50e",
+      "name": "Send a message in Gmail",
+      "webhookId": "188a0446-03d4-446d-881a-199b075d4906",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tN354ZVvnNfn3jqO",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "105e6bdb-4477-4274-a887-4578e2e81a0a",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "acdad6c320738f64b9d1d74ff0869c01e0d44034958fc7552e0eb483d17e4784"
+  },
+  "id": "FJAWW7gyMAHpKoaP",
+  "tags": []
+}

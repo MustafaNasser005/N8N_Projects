@@ -1,0 +1,173 @@
+{
+  "name": "Smart Car Dealership",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "a52637bf-3991-4358-801b-6188ecf43aeb",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -560,
+        16
+      ],
+      "id": "b9a10271-8924-4d2a-b312-5040e8489695",
+      "name": "Webhook",
+      "webhookId": "a52637bf-3991-4358-801b-6188ecf43aeb"
+    },
+    {
+      "parameters": {
+        "sendTo": "mh.magdi.nasser@gmail.com",
+        "subject": "NEW Car Sale!",
+        "emailType": "text",
+        "message": "=A Car has just been sold. Here are the details: \nCar Type: {{ $json.body.car }}\nPrice: {{ $json.body.price }}\nBuyer: {{ $json.body.buyer }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -336,
+        -96
+      ],
+      "id": "5b9608cc-37d5-4bed-9245-521ecca4d3fe",
+      "name": "Send a message",
+      "webhookId": "b5400773-122d-4c4d-b443-02b4b6c2ec81",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tN354ZVvnNfn3jqO",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1AilZ8XCRNDD4SEQk6QzFTEzJrkvfRMBAyJHLuZUyYW8",
+          "mode": "list",
+          "cachedResultName": "N8N Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AilZ8XCRNDD4SEQk6QzFTEzJrkvfRMBAyJHLuZUyYW8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1092208228,
+          "mode": "list",
+          "cachedResultName": "Car Sales",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AilZ8XCRNDD4SEQk6QzFTEzJrkvfRMBAyJHLuZUyYW8/edit#gid=1092208228"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.body.buyer }}",
+            "Price": "={{ $json.body.price }}",
+            "Type": "={{ $json.body.car }}",
+            "Date": "={{ $today.format('yyyy-MM-dd') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Price",
+              "displayName": "Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Type",
+              "displayName": "Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -336,
+        128
+      ],
+      "id": "a19649ed-10f2-45c7-a1a0-f8a0c7cea9ea",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "abLMB8zmY4TfoGTW",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "saveExecutionProgress": true,
+    "saveManualExecutions": false,
+    "errorWorkflow": "FY1b0zIL1Jfr17Jq",
+    "timezone": "Africa/Cairo",
+    "timeSavedPerExecution": 59
+  },
+  "versionId": "7967c700-e9ee-449b-b408-92ea1bd6da05",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "acdad6c320738f64b9d1d74ff0869c01e0d44034958fc7552e0eb483d17e4784"
+  },
+  "id": "FY1b0zIL1Jfr17Jq",
+  "tags": []
+}

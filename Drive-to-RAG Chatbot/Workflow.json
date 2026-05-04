@@ -1,0 +1,720 @@
+{
+  "name": "Final RAG Agent Chatbot Project",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Knowledge Base\n### Insert Documents from Google Drive into Vector Database",
+        "height": 848,
+        "width": 1216,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1488,
+        -464
+      ],
+      "id": "45b0f216-7393-424c-84db-7151c0e7aeef",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "modelName": "embed-english-light-v2.0"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsCohere",
+      "typeVersion": 1,
+      "position": [
+        112,
+        240
+      ],
+      "id": "ad903902-aa14-400c-8c9d-2e46b847108b",
+      "name": "Embeddings Cohere1",
+      "credentials": {
+        "cohereApi": {
+          "id": "535B4lmjb9HmYwnP",
+          "name": "CohereApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "rag-chatbot",
+          "mode": "list",
+          "cachedResultName": "rag-chatbot"
+        },
+        "options": {
+          "pineconeNamespace": "={{ $json.File_Name }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        32
+      ],
+      "id": "140c7d21-f1af-4592-a033-6fbc0bd3c669",
+      "name": "Pinecone Vector Store1",
+      "credentials": {
+        "pineconeApi": {
+          "id": "wXxyiGGuBCjsz3Q2",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "=Returns documents related to Apple {{ $json.File_Name.split('.')[0] }} report, including financials, outlook, margins, and all key details from the earnings reports.",
+        "topK": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1.1,
+      "position": [
+        352,
+        -160
+      ],
+      "id": "a7ecce98-e990-49ad-a15f-7e4cae7facdc",
+      "name": "Answer questions with a vector store"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -192,
+        -336
+      ],
+      "id": "aaee43d4-2203-41b9-86b4-33384df11a84",
+      "name": "When chat message received",
+      "webhookId": "ce245cfd-0e6b-4b56-9d4c-d6be79f6f913"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('When chat message received').item.json.chatInput }}",
+        "options": {
+          "systemMessage": "=You are an AI assistant specialized in analyzing Apple’s quarterly financial reports. Your main goal is to answer questions accurately and precisely using the vector database, which contains relevant  Q1 or Q2 or Q3, Q4 reports.\n\nProvide only information that comes directly from these reports or verified data. If the requested information is missing or unclear, explicitly state that there is insufficient data.\n\nKeep responses concise and to the point. Include specific numbers and facts whenever possible, and clearly indicate whether the information is sourced from Q1 or Q2 or Q3, Q4.\n\nDeliver quick, reliable insights into Apple’s quarterly financials without adding unnecessary details."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        160,
+        -336
+      ],
+      "id": "1de712da-39bf-4bb7-bb67-da7e3f3a5052",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "content": "## RAG Chatbot\n### Read from Vector Database and Generate Accurate Answers to User Queries",
+        "height": 848,
+        "width": 896
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -464
+      ],
+      "id": "616aa65e-d962-4403-aa24-9f75bdde7fb3",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "modelName": "embed-english-v3.0"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsCohere",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        -96
+      ],
+      "id": "10517ba6-6e1c-4314-8f61-acda27c8e5f8",
+      "name": "Embeddings Cohere",
+      "credentials": {
+        "cohereApi": {
+          "id": "535B4lmjb9HmYwnP",
+          "name": "CohereApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "textSplittingMode": "custom",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        -576,
+        -64
+      ],
+      "id": "b2b07f17-10e5-4e15-af55-ab675cf46934",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "rag-chatbot",
+          "mode": "list",
+          "cachedResultName": "rag-chatbot"
+        },
+        "embeddingBatchSize": 2,
+        "options": {
+          "pineconeNamespace": "={{ $json.File_Name }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        -656,
+        -352
+      ],
+      "id": "ef8b017a-04da-4a57-9139-3a147771fec5",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "wXxyiGGuBCjsz3Q2",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.File_ID }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1056,
+        -192
+      ],
+      "id": "72d445b2-9a52-46d1-b117-30bda6b70782",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0kFftAJMIX6dbQe5",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1r6gnOj2YRMphjG3sDOtW8XdMJArfjHh3",
+          "mode": "list",
+          "cachedResultName": "Apple Info",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1r6gnOj2YRMphjG3sDOtW8XdMJArfjHh3"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1424,
+        -192
+      ],
+      "id": "efe83cba-e129-47fd-ba76-a17b0ed80160",
+      "name": "Google Drive Trigger",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0kFftAJMIX6dbQe5",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        128,
+        -112
+      ],
+      "id": "f2d3c779-4472-42bd-bf96-9db426717c0f",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "Opwarsn6CE4mxuBw",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        512,
+        48
+      ],
+      "id": "fd753000-9517-4770-8717-0a2bc7af0030",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "Opwarsn6CE4mxuBw",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1424,
+        16
+      ],
+      "id": "a1c17305-775b-4747-aff9-6e6c00e3e695",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1r6gnOj2YRMphjG3sDOtW8XdMJArfjHh3",
+            "mode": "list",
+            "cachedResultName": "Apple Info",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1r6gnOj2YRMphjG3sDOtW8XdMJArfjHh3"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -1216,
+        16
+      ],
+      "id": "55be882b-e441-4cb0-835d-75e38eda0352",
+      "name": "Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0kFftAJMIX6dbQe5",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.File_ID }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -864,
+        16
+      ],
+      "id": "895359b8-43fa-4f76-a425-212dbfd670fe",
+      "name": "Download file1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0kFftAJMIX6dbQe5",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -880,
+        -432
+      ],
+      "id": "de24d706-56da-4b0b-82c5-d8ed68e0d049",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        144
+      ],
+      "id": "1b8fc975-a5cf-4bb7-8b52-864c4cf6c31a",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5ec306e9-fa7d-4a46-9ecd-4050add6b802",
+              "name": "File_Name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "3ae0538d-5523-477c-93ee-ce5b89645037",
+              "name": "File_ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1040,
+        16
+      ],
+      "id": "fdaf2067-8c4a-4bbd-9b06-4954d90b19e2",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1d5eaf49-0eb5-4c2f-b3e6-4f633f5c1161",
+              "name": "File_Name",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "bbe8155a-839f-425d-9e4c-c761991d80a7",
+              "name": "File_ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1216,
+        -192
+      ],
+      "id": "4c1a14c9-6d89-4212-bbf8-79ef8e8fb372",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "content": "\n## Upload all files",
+        "height": 80,
+        "width": 368,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1440,
+        208
+      ],
+      "id": "45d3f218-b0b2-42d1-b14e-9d3338253e96",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "\n## Run on Active Mode",
+        "height": 80,
+        "width": 384,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1472,
+        -304
+      ],
+      "id": "270c58b4-048a-489b-a035-e047c6f46c41",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "209de11e-8bd6-4f6b-a5d3-d35a285ac5b5",
+              "name": "File_Name",
+              "value": "=={{ $json.chatInput.match(/Q[1-4]/i) \n    ? ($json.chatInput.match(/Q[1-4]/i)[0].toUpperCase() + '.pdf').trim() \n    : '' }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -16,
+        -336
+      ],
+      "id": "29e83709-599d-492c-a444-e254937293f2",
+      "name": "Edit Fields2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Embeddings Cohere1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store1": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Answer questions with a vector store",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Answer questions with a vector store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Cohere": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Answer questions with a vector store",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Download file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "84c43124-4f1a-4a15-8f5e-8f883732d57f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "acdad6c320738f64b9d1d74ff0869c01e0d44034958fc7552e0eb483d17e4784"
+  },
+  "id": "dJzBQsKIljpqA5ur",
+  "tags": []
+}

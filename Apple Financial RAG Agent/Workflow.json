@@ -1,0 +1,795 @@
+{
+  "name": "RAG Agent Chatbot - Mixed Sheet, Drive",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Preprocessing",
+        "height": 656,
+        "width": 1328
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        -576
+      ],
+      "id": "29bb65df-23f3-43f8-9f33-398b1387889e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Uploading to Vector Database",
+        "height": 656,
+        "width": 672,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        848,
+        -576
+      ],
+      "id": "3aad1fbc-1713-4f17-95d2-ed6ada3a41dd",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "## RAG Chatbot Agent",
+        "height": 784,
+        "width": 1328,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -496,
+        96
+      ],
+      "id": "54386164-cc63-480c-b03e-cb1bb8150980",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.File_ID }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        624,
+        -304
+      ],
+      "id": "8550e53a-6b51-4b3c-a7fb-afd2c14f26c4",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0kFftAJMIX6dbQe5",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        -160
+      ],
+      "id": "b5f1f7fa-e3f2-4777-9928-dcc1bf112ea6",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "value": "1r6gnOj2YRMphjG3sDOtW8XdMJArfjHh3",
+            "mode": "list",
+            "cachedResultName": "Apple Info",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1r6gnOj2YRMphjG3sDOtW8XdMJArfjHh3"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -192,
+        -480
+      ],
+      "id": "8a54728d-e247-4dfd-8b24-de11e3062e32",
+      "name": "Search files and folders",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "0kFftAJMIX6dbQe5",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5ec306e9-fa7d-4a46-9ecd-4050add6b802",
+              "name": "File_Name",
+              "value": "={{ $json.Name }}",
+              "type": "string"
+            },
+            {
+              "id": "3ae0538d-5523-477c-93ee-ce5b89645037",
+              "name": "File_ID",
+              "value": "={{ $json.ID }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        -464
+      ],
+      "id": "be17b660-6035-4799-bfdd-aacbe3ef76f4",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "modelName": "embed-english-light-v2.0"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsCohere",
+      "typeVersion": 1,
+      "position": [
+        224,
+        752
+      ],
+      "id": "9af700e1-d7d2-48e0-813a-ce3ecb3cc332",
+      "name": "Embeddings Cohere1",
+      "credentials": {
+        "cohereApi": {
+          "id": "535B4lmjb9HmYwnP",
+          "name": "CohereApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "rag-chatbot",
+          "mode": "list",
+          "cachedResultName": "rag-chatbot"
+        },
+        "options": {
+          "pineconeNamespace": "={{ $json.File_Name }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        144,
+        576
+      ],
+      "id": "4ce1889a-5e15-4cf4-98e0-d46e684974d7",
+      "name": "Pinecone Vector Store1",
+      "credentials": {
+        "pineconeApi": {
+          "id": "wXxyiGGuBCjsz3Q2",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "=Returns documents related to Apple {{ $json.File_Name.split('.')[0] }} report, including financials, outlook, margins, and all key details from the earnings reports.",
+        "topK": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1.1,
+      "position": [
+        288,
+        384
+      ],
+      "id": "8683606d-d520-4de1-a262-be30c690f558",
+      "name": "Answer questions with a vector store"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -416,
+        176
+      ],
+      "id": "40ebbe0b-2cf4-4bc9-b0df-344e9f4979ad",
+      "name": "When chat message received",
+      "webhookId": "ce245cfd-0e6b-4b56-9d4c-d6be79f6f913"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('When chat message received').item.json.chatInput }}",
+        "options": {
+          "systemMessage": "=You are an AI assistant specialized in analyzing Apple’s quarterly financial reports. Your main goal is to answer questions accurately and precisely using the vector database, which contains relevant  Q1 or Q2 or Q3, Q4 reports.\n\nProvide only information that comes directly from these reports or verified data. If the requested information is missing or unclear, explicitly state that there is insufficient data.\n\nKeep responses concise and to the point. Include specific numbers and facts whenever possible, and clearly indicate whether the information is sourced from Q1 or Q2 or Q3, Q4.\n\nDeliver quick, reliable insights into Apple’s quarterly financials without adding unnecessary details."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        128,
+        176
+      ],
+      "id": "9cb9ec44-1ffc-4e67-810c-c48ade932631",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -16,
+        448
+      ],
+      "id": "f0399c8a-d2ba-461d-ab6e-86be83044710",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "Opwarsn6CE4mxuBw",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        480,
+        576
+      ],
+      "id": "3d3872f2-dd0e-4b89-a54a-2f409496a94e",
+      "name": "Groq Chat Model1",
+      "credentials": {
+        "groqApi": {
+          "id": "Opwarsn6CE4mxuBw",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "209de11e-8bd6-4f6b-a5d3-d35a285ac5b5",
+              "name": "File_Name",
+              "value": "=={{ $json.chatInput.match(/Q[1-4]/i) \n    ? ($json.chatInput.match(/Q[1-4]/i)[0].toUpperCase() + '.pdf').trim() \n    : '' }}\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -160,
+        176
+      ],
+      "id": "f18436cb-04e7-4a46-b153-19a1f77247f1",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "rag-chatbot",
+          "mode": "list",
+          "cachedResultName": "rag-chatbot"
+        },
+        "embeddingBatchSize": 2,
+        "options": {
+          "pineconeNamespace": "={{ $json.File_Name }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "typeVersion": 1.3,
+      "position": [
+        1168,
+        -496
+      ],
+      "id": "1a889578-eb0b-464e-847e-a22f3c69b7cc",
+      "name": "Pinecone Vector Store",
+      "credentials": {
+        "pineconeApi": {
+          "id": "wXxyiGGuBCjsz3Q2",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "textSplittingMode": "custom",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "Apple_Report",
+                "value": "={{ $json.name }}"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        1168,
+        -240
+      ],
+      "id": "9d1ef886-5b4a-43fe-8542-7c77ae30890d",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        912,
+        -512
+      ],
+      "id": "4d3b81b8-4f60-48f1-b167-f84f89a5d03f",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        1264,
+        -96
+      ],
+      "id": "82380991-f838-4c51-b10c-7d7d5a7d7a53",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "modelName": "embed-english-v3.0"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsCohere",
+      "typeVersion": 1,
+      "position": [
+        1024,
+        -224
+      ],
+      "id": "3ef45794-1fba-4a2e-9f7c-869402ac9791",
+      "name": "Embeddings Cohere",
+      "credentials": {
+        "cohereApi": {
+          "id": "535B4lmjb9HmYwnP",
+          "name": "CohereApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -432,
+        -480
+      ],
+      "id": "1c8c7762-3a3f-47ec-ab07-aa976eb75515",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1AilZ8XCRNDD4SEQk6QzFTEzJrkvfRMBAyJHLuZUyYW8",
+          "mode": "list",
+          "cachedResultName": "N8N Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AilZ8XCRNDD4SEQk6QzFTEzJrkvfRMBAyJHLuZUyYW8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 648712113,
+          "mode": "list",
+          "cachedResultName": "Apple",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AilZ8XCRNDD4SEQk6QzFTEzJrkvfRMBAyJHLuZUyYW8/edit#gid=648712113"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -176,
+        -160
+      ],
+      "id": "9d29d08c-5e9f-457e-bd3b-434f8c30fd27",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "abLMB8zmY4TfoGTW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// ✅ Get ALL incoming data as one flat array\nconst allInputs = $input.all(); \n\n// Separate Drive files vs Sheet rows by their structure\nconst driveInput = [];\nconst sheetInput = [];\n\n// Loop through all incoming items and detect source\nfor (const item of allInputs) {\n  const data = item.json;\n  \n  // Drive files have `id` + `name`\n  if (data.id && data.name) {\n    driveInput.push(data);\n  }\n  \n  // Sheet rows have `ID` + `Name`\n  if (data.ID || data.Name) {\n    sheetInput.push(data);\n  }\n}\n\n// ✅ Extract already processed IDs from sheet\nconst processedIds = sheetInput\n  .filter(row => row.ID && row.ID !== \"\")\n  .map(row => row.ID);\n\n// ✅ Filter only NEW files not in sheet\nconst newFiles = driveInput.filter(f => !processedIds.includes(f.id));\n\n// ✅ Debug info\nconsole.log(`Drive files found: ${driveInput.length}`);\nconsole.log(`Sheet rows found: ${sheetInput.length}`);\nconsole.log(`Already processed IDs: ${processedIds.length}`);\nconsole.log(`New files to download: ${newFiles.length}`);\n\n// ✅ Output only the new ones\nreturn newFiles.map(f => ({\n  json: {\n    fileId: f.id,\n    fileName: f.name\n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        176,
+        -464
+      ],
+      "id": "8b40d3e4-1ea7-4c10-94f1-2b7ed8315814",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        16,
+        -304
+      ],
+      "id": "0ae472fb-ae70-4a12-b165-3f6b6c6179ae",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1AilZ8XCRNDD4SEQk6QzFTEzJrkvfRMBAyJHLuZUyYW8",
+          "mode": "list",
+          "cachedResultName": "N8N Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AilZ8XCRNDD4SEQk6QzFTEzJrkvfRMBAyJHLuZUyYW8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 648712113,
+          "mode": "list",
+          "cachedResultName": "Apple",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1AilZ8XCRNDD4SEQk6QzFTEzJrkvfRMBAyJHLuZUyYW8/edit#gid=648712113"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.fileId }}",
+            "Name": "={{ $json.fileName }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        336,
+        -304
+      ],
+      "id": "29135fb8-d91b-4852-9887-6bb3a9f531f6",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "abLMB8zmY4TfoGTW",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search files and folders": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Cohere1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store1": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Answer questions with a vector store",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Answer questions with a vector store": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Answer questions with a vector store",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Cohere": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Search files and folders",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "155f665e-4cf6-4b89-8594-02fa8909e1c2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "acdad6c320738f64b9d1d74ff0869c01e0d44034958fc7552e0eb483d17e4784"
+  },
+  "id": "v3G58X2M5xJApI62",
+  "tags": []
+}
