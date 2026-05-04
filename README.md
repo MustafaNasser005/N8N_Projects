@@ -9,7 +9,7 @@ A comprehensive collection of production-ready n8n automation workflows and AI a
 ### 1. **Drive-to-RAG Chatbot**
 A production-ready Retrieval-Augmented Generation (RAG) chatbot that ingests documents from Google Drive, indexes them into Pinecone, and answers user queries using a vector-backed LLM agent.
 
-![Drive-to-RAG Chatbot](Drive-to-RAG%20Chatbot/Screenshots/app%20screen.png)
+![Drive-to-RAG Chatbot](Drive-to-RAG%20Chatbot/screenshots/app%20screen.png)
 
 - **Tech Stack:** Google Drive, Cohere Embeddings, Pinecone, Groq LLM
 - **Features:** Automated document ingestion, namespace isolation, quarter-based routing, LLM-backed agent
